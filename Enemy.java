@@ -11,4 +11,8 @@ public abstract class Enemy {
 	public void move() {
 		
 	}
+	
+	public int getX() {
+		return 0;
+	}
 }
