@@ -19,6 +19,7 @@ public class Regular extends Enemy{
 		super();
 		this.health = 100;
 		this.speed = 10;
+		this.current_health = this.health;
 		
 		// Initial spawn
 		Move temp = new Move(speed, start);
@@ -59,10 +60,10 @@ public class Regular extends Enemy{
 		g.setColor(Color.RED);
 		g.drawRect(x, y, 65, 105);
 		// Health Bar
-		double ratio = 75.0 / health;
+		double ratio = (double)this.current_health / this.health;
 		g.setColor(Color.RED);
-		g.fillRect(x + 4, y - 8, 25, 10);
+		g.fillRect(x + 4, y - 8, 50, 10);
 		g.setColor(Color.GREEN);
-		g.fillRect(x + 4, y - 8, (int) (25 * ratio), 10);
+		g.fillRect(x + 4, y - 8, (int) (50 * ratio), 10);
 	}
 }

@@ -15,6 +15,7 @@ public class GameFrame extends JFrame {
       this.add(panel);
       this.setBackground(Color.WHITE);
       this.setVisible(true);
+      this.setResizable(false);
       this.pack();
     }
 
