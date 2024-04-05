@@ -18,7 +18,7 @@ public class Regular extends Enemy{
 	public Regular(Point start) {
 		super();
 		this.health = 100;
-		this.speed = 10;
+		this.speed = 15;
 		this.current_health = this.health;
 		
 		// Initial spawn

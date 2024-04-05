@@ -1,9 +1,9 @@
 import java.awt.Graphics;
 
 public abstract class Enemy {
-	public int health;
-	public int speed;
-	public int current_health;
+	protected int health;
+	protected int speed;
+	protected int current_health;
 	
 	public void draw(Graphics g) {
 		
