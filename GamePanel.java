@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.io.*;
 import java.lang.*;
 import javax.imageio.ImageIO;
@@ -7,20 +9,24 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.Timer;
 
-public class GamePanel extends JPanel implements ActionListener{
-	private final boolean grid = false;
+public class GamePanel extends JPanel implements ActionListener, MouseListener{
+	private final boolean grid = true;
 	Image img; 
 	Image sign;
 	Image money;
 	Image heart;
 	Base base;
+	Defense defense;
 	Wave wave;
 	Timer timer;
+	private int width = 1450;
+	private int height = 775;
 	
 	public GamePanel( ) {
 		this.setFocusable(true);
 	    this.requestFocusInWindow();
-	    this.setPreferredSize(new Dimension(1450, 773));
+	    this.setPreferredSize(new Dimension(width, height));
+	    this.addMouseListener(this);
 	    try {
 	    	sign = ImageIO.read(new File("Sign.png"));
 	    	img = ImageIO.read(new File("map.jpg"));
@@ -37,6 +43,9 @@ public class GamePanel extends JPanel implements ActionListener{
 	    // Create Base
 	    base = new Base(1000, 1000);
 	    
+	    // Create defense
+	    defense = new Defense();
+	    
 	    // Create Enemies
 	    this.wave = new Wave();
 	    wave.addEnemies();
@@ -49,6 +58,8 @@ public class GamePanel extends JPanel implements ActionListener{
 	}
 	
 	public void paint(Graphics g) {
+		// Clear black board
+		g.clearRect(0, 0, width, height);
 		// Draw sign
 		g.drawRect(10, 10, 330, 750);
 		drawTimerPanel(g);
@@ -60,6 +71,7 @@ public class GamePanel extends JPanel implements ActionListener{
 		g.drawImage(heart, 35, 160, null);
 		g.drawString(": " + base.getHealth(), 220, 240);
 		g.drawImage(money, 35, 300, null);
+		g.drawString(": " + base.getMoney(), 220, 340);
 		
 		// Draw bg
 		g.drawImage(img, 350, 0, null);
@@ -70,14 +82,22 @@ public class GamePanel extends JPanel implements ActionListener{
 		for (Enemy en: wave.getList()) {
 			en.draw(g);
 		}
+		
+		
+		// Draw defense
+		g.setColor(Color.BLACK);
+		defense.draw(g);
+		
+		
+		g.setColor(Color.YELLOW);
 		// Grids
 		if (grid) {
 			for (int i = 1450 / 100; i >= 0; i--) {
-				g.drawLine(i * 100, 0, i * 100, 800);
+				g.drawLine(i * 100, 0, i * 100, height);
 			}
 			
 			for (int i = 800 / 100; i >= 0; i--) {
-				g.drawLine(0, i * 100, 1250, i * 100);
+				g.drawLine(0, i * 100, width, i * 100);
 			}
 		}
 	}
@@ -88,11 +108,21 @@ public class GamePanel extends JPanel implements ActionListener{
 		int damage = wave.moveEnemies();
 		if (this.wave.waveOver()) {
 			this.wave.addEnemies();
+			this.base.changeMoney((Integer.parseInt(this.wave.waveNumber().substring(6)) - 1) * 200);
 		}
 		// Base
 		base.collision(damage);
 		if (base.gameOver()) {
 			timer.stop();
+		}
+		// Defense
+		for (Tower tower: this.defense.getList()) {
+			ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(5);
+			exec.schedule(new Runnable() {
+			          public void run() {
+			              tower.fire();
+			          }
+			     }, 5, TimeUnit.SECONDS);
 		}
 		// DELAY
 		try {
@@ -101,6 +131,36 @@ public class GamePanel extends JPanel implements ActionListener{
 			e1.printStackTrace();
 		}
 		repaint();
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("Clicked");
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 }

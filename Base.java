@@ -49,6 +49,10 @@ public class Base {
 		return this.currentHealth;
 	}
 	
+	public int getMoney() {
+		return this.money;
+	}
+	
 	public void changeMoney(int num) {
 		this.money += num;
 	}
