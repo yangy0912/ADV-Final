@@ -9,7 +9,6 @@ public class BasicTower extends Tower{
 	}
 	
 	public void fire() {
-		System.out.println("Rate of fire");
 
 	}
 	

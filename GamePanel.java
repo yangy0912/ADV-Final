@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.Timer;
+import java.awt.MouseInfo;
 
 public class GamePanel extends JPanel implements ActionListener, MouseListener{
 	private final boolean grid = true;
@@ -19,6 +20,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 	Defense defense;
 	Wave wave;
 	Timer timer;
+	Artillery artillery;
+	public Point initial;
+	public Point post;
+	public boolean aiming = false;
 	private int width = 1450;
 	private int height = 775;
 	
@@ -49,6 +54,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 	    // Create Enemies
 	    this.wave = new Wave();
 	    wave.addEnemies();
+	    
+	    // Create tower
+	    artillery = new Artillery(390, 300);
+	    
+	    // Center point is (490, 370)
 	}
 	
 	// Draw wooden panel
@@ -100,6 +110,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 				g.drawLine(0, i * 100, width, i * 100);
 			}
 		}
+		
+		// Draw tower
+		artillery.draw(g);
+		if (aiming) {
+			int x = Math.abs(MouseInfo.getPointerInfo().getLocation().x);
+			int y = (MouseInfo.getPointerInfo().getLocation().y);
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setStroke(new BasicStroke(3));
+			g2.drawLine(x, y, 500, 376);
+		}
 	}
 
 	@Override
@@ -142,14 +162,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if ((e.getX() > 390 && e.getX() < 590) && (e.getY() > 300 && e.getY() < 440)) {
+			System.out.println("held");
+			aiming = true;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Released");
+		aiming = false;
 	}
 
 	@Override
