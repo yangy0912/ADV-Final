@@ -11,7 +11,7 @@ import javax.swing.Timer;
 import java.awt.MouseInfo;
 
 public class GamePanel extends JPanel implements ActionListener, MouseListener{
-	private final boolean grid = true;
+	private final boolean grid = false;
 	Image img; 
 	Image sign;
 	Image money;
@@ -20,12 +20,15 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 	Defense defense;
 	Wave wave;
 	Timer timer;
+	Rock rock;
 	Artillery artillery;
+	public double angle;
 	public Point initial;
 	public Point post;
 	public boolean aiming = false;
 	private int width = 1450;
 	private int height = 775;
+	private ArrayList<Rock> projectiles = new ArrayList<Rock>();;
 	
 	public GamePanel( ) {
 		this.setFocusable(true);
@@ -113,12 +116,24 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 		
 		// Draw tower
 		artillery.draw(g);
+		for (Rock r: projectiles) {
+			r.draw(g);
+			
+		}
+		
+		
+		g.setColor(Color.BLACK);
 		if (aiming) {
 			int x = Math.abs(MouseInfo.getPointerInfo().getLocation().x);
 			int y = (MouseInfo.getPointerInfo().getLocation().y);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
 			g2.drawLine(x, y, 500, 376);
+			g2.drawLine(500, 376, 500 * 2 - x, 376 * 2 - y);
+			int x1 = 500 * 2 - x;
+			int y1 = 376 * 2 - y ;
+			double coeff = ((double) (376 - y1)) / ((double) (x1 - 500));
+			angle = (Math.atan(coeff));
 		}
 	}
 
@@ -136,13 +151,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 			timer.stop();
 		}
 		// Defense
-		for (Tower tower: this.defense.getList()) {
-			ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(5);
-			exec.schedule(new Runnable() {
-			          public void run() {
-			              tower.fire();
-			          }
-			     }, 5, TimeUnit.SECONDS);
+		for (int count = 0; count < projectiles.size(); count++) {
+			projectiles.get(count).move();
 		}
 		// DELAY
 		try {
@@ -163,14 +173,13 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if ((e.getX() > 390 && e.getX() < 590) && (e.getY() > 300 && e.getY() < 440)) {
-			System.out.println("held");
 			aiming = true;
 		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("Released");
+		projectiles.add(new Rock(angle));
 		aiming = false;
 	}
 
