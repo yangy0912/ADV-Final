@@ -33,6 +33,10 @@ public class Base {
 		return false;
 	}
 	
+	public void heal() {
+		this.currentHealth += (maxHealth - currentHealth) * 0.2; 
+	}
+	
 	public void draw(Graphics g) {
 		// Draw base
 		g.drawImage(img, 325, 125, null);

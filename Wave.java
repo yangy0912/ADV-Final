@@ -24,6 +24,13 @@ public class Wave {
 		return false;
 	}
 	
+	public void nuke() {
+		for (int n = 0; n < this.waveOfEnemy.size(); n++) {
+			Regular x = (Regular) this.waveOfEnemy.get(n);
+			x.current_health = x.current_health / 2;
+		}
+	}
+	
 	public int moveEnemies() {
 		int damage = 0;
 		for (int n = 0; n < this.waveOfEnemy.size(); n++) {

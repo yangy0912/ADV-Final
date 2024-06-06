@@ -18,7 +18,7 @@ public class Regular extends Enemy{
 	public Regular(Point start) {
 		super();
 		this.health = 100;
-		this.speed = 10;
+		this.speed = 8;
 		this.current_health = this.health;
 		
 		// Initial spawn
@@ -38,6 +38,26 @@ public class Regular extends Enemy{
 	
 	public int getX() {
 		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	public int getWidth() {
+		return 65;
+	}
+	
+	public int getHeight() {
+		return 105;
+	}
+	
+	public void hit(int damage) {
+		this.current_health -= damage;
+	}
+	
+	public int getHealth() {
+		return this.current_health;
 	}
 	
 	public void move() {
@@ -66,4 +86,6 @@ public class Regular extends Enemy{
 		g.setColor(Color.GREEN);
 		g.fillRect(x + 4, y - 8, (int) (50 * ratio), 10);
 	}
+	
+
 }
